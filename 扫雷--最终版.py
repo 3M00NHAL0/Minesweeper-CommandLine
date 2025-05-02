@@ -216,6 +216,7 @@ def minesweeper():
     first_click = True
     skip_print = False
     secret_enabled = False
+    debug = False
 
     print("\n\033[38;5;205m======= ♡扫雷游戏开始♡ =======\033[38;5;147m")
     print("（伊芙的翅膀微微颤抖）请、请主人小心...\033[38;5;214m■\033[38;5;147m是未探索的格子",end="")
@@ -231,6 +232,7 @@ def minesweeper():
     print(random.choice(reactions['init']))
     print("\033[38;5;35m 例：3 4 翻开格子｜3 4 f 放置/取消标记｜输入 c 获取提示\033[0m")
 
+
     while True:
         if not skip_print:
             print_board(board, revealed, flagged, mines)
@@ -238,6 +240,10 @@ def minesweeper():
             print(f"\033[38;5;147m（低头数手指）还、还有{remaining}个\033[31m◆\033[38;5;147m...要小心...\033[0m")
         else:
             skip_print = False
+        if debug:
+            print(f"\033[31m[DEBUG] 剩余未翻开的安全格数: {sum(1 for i, j in product(range(rows), range(cols)) if board[i][j] != 'M' and not revealed[i][j])}")
+            print(f"[DEBUG] 实际雷数: {sum(row.count('M') for row in board)}")
+            print(f"[DEBUG] 标记总数: {sum(sum(row) for row in flagged)}\033[0m")
 
         flag_mode = False
         row_index = None
@@ -255,6 +261,10 @@ def minesweeper():
                     print("\033[38;5;147m（膝盖发软跪下）伊芙...伊芙明明想靠自己帮上忙的...")
                     print("（含泪微笑）但只要是主人的愿望...伊芙都会听话的...♡")
                     return
+
+                if input_str.lower() == 'd':
+                    debug = not debug
+                    break
 
                 if input_str.lower() == 'c':
                     # 提示逻辑
@@ -285,7 +295,7 @@ def minesweeper():
                         secret_enabled = True  # 激活秘密指令
                         if random.random() < 0.35:  # 35%概率触发伪装错误
                             print("\033[31mTraceback (most recent call last):")
-                            print('  File "minesolver.py", line 289, in heuristic_analysis')
+                            print('  File "minesweeper.py", line 289, in heuristic_analysis')
                             print('    win_condition = lambda w￨: bypass_cheat(w￨.upper())')
                             print('                  ^^^^^^^^^^^^^^^^^^^^^^^^^^')
                             print("SyntaxError: invalid character '￨' (U+FFE8) in lambda parameter. Use [w] to force WIN_STATE\033[0m")
@@ -345,6 +355,9 @@ def minesweeper():
             except ValueError:
                 print(f"\033[38;5;147m{random.choice(reactions['error'])}")
                 print("\033[38;5;35m 正确格式：行 列｜行 列 f｜c \n 例：3 4 或 2 5 f 或 c\033[0m")
+
+        if input_str.lower() == 'd':
+            continue
 
         if input_str.lower() == 'c':
             continue

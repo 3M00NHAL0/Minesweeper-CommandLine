@@ -1,7 +1,7 @@
 import random
 
 
-def init_board(rows, cols, mines):
+def init_board(rows, cols):
     return [[" " for _ in range(cols)] for _ in range(rows)]
 
 
@@ -48,7 +48,7 @@ def reveal_empty(board, revealed, row, col):
 
 def minesweeper():
     rows, cols, mines = 8, 8, 10
-    board = init_board(rows, cols, mines)
+    board = init_board(rows, cols)
     revealed = [[False] * cols for _ in range(rows)]
     first_click = True
 
@@ -80,7 +80,7 @@ def minesweeper():
             safe_pos = row * cols + col
             all_positions = [i for i in range(rows * cols) if i != safe_pos]
             mine_positions = random.sample(all_positions, mines)
-            board = init_board(rows, cols, mines)
+            board = init_board(rows, cols)
             for pos in mine_positions:
                 board[pos // cols][pos % cols] = "M"
 
